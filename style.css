@@ -56,11 +56,13 @@ button:hover {
 }
 
 #gameArea {
-  margin-top: 20px;
-  padding: 20px;
-  border-radius: 10px;
   display: inline-block;
   text-align: left;
+}
+
+#gameArea h2 {
+  font-size: 32px;
+  text-align: center;
 }
 
 #gameArea p {
