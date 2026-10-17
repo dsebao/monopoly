@@ -1,29 +1,43 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Banco de Monopoly</title>
-    <link rel="stylesheet" href="style.css">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@100..900&display=swap" rel="stylesheet">
-    <script src="script.js" defer></script>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Banco de Monopoly</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Alfa+Slab+One&family=Outfit:wght@400;600;800;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+  <script src="script.js" defer></script>
 </head>
 <body>
   <div class="container">
-  <div>
-    <img width="300px" src="Monopoly_logo.png" alt="">
-  </div>
-  <div class="settings">
-    <label for="playerCount">Ingrese el número de jugadores:</label>
-    <input type="number" id="playerCount" min="2" max="8">
-    <button id="startGame">Iniciar Juego</button>
-    <button id="resetGame" style="display:none;">Reiniciar Juego</button>
-  </div>
+    <header class="lid">
+      <img src="Monopoly_logo.png" alt="Monopoly">
+    </header>
+
+    <section class="settings card">
+      <p class="eyebrow">Nueva partida</p>
+      <label for="playerCount">¿Cuántos jugadores?</label>
+      <input type="number" id="playerCount" min="2" max="8" value="4">
+      <button id="startGame" class="btn btn-red">Repartir dinero</button>
+    </section>
+
     <div id="gameArea" style="display:none;">
-        <h2>Dinero total del banco: $<span id="bankBalance">20000</span></h2>
-        <div id="playerGrid" class="grid"></div>
+      <div class="bank-row">
+        <div class="bill">
+          <div class="bill-inner">
+            <span class="bill-corner">M</span>
+            <div>
+              <p class="eyebrow">Banco</p>
+              <h2>$<span id="bankBalance">20000</span></h2>
+            </div>
+            <span class="bill-corner">M</span>
+          </div>
+        </div>
+        <button id="resetGame" class="btn btn-dark" style="display:none;">Reiniciar juego</button>
+      </div>
+      <div id="playerGrid" class="grid"></div>
     </div>
   </div>
 </body>

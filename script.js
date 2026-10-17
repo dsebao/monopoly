@@ -2,12 +2,28 @@
 let players = [];
 let bankBalance = 20000;
 
+// Colores de los títulos de propiedad: [fondo, texto]
+const DEED_COLORS = [
+  ["#955436", "#fff"], ["#aae0fa", "#1b1b1b"], ["#d93a96", "#fff"], ["#f7941d", "#1b1b1b"],
+  ["#ed1b24", "#fff"], ["#fef200", "#1b1b1b"], ["#1fb25a", "#fff"], ["#0072bb", "#fff"],
+];
+
+const fmt = (n) => String(n).replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+
+function showGame() {
+  document.getElementById("gameArea").style.display = "block";
+  document.getElementById("resetGame").style.display = "inline-block";
+  document.querySelector(".settings").style.display = "none";
+}
+
 // Función para inicializar el juego
 function initializeGame(playerCount) {
-  const gameArea = document.getElementById("gameArea");
-  const playerGrid = document.getElementById("playerGrid");
   const bankBalanceElement = document.getElementById("bankBalance");
-  const resetGameButton = document.getElementById("resetGame");
+
+  if (!(playerCount >= 2 && playerCount <= 8)) {
+    alert("Ingrese entre 2 y 8 jugadores.");
+    return false;
+  }
 
   // Restar el dinero inicial asignado a los jugadores del banco
   const initialPlayerMoney = 1500 * playerCount;
@@ -16,7 +32,7 @@ function initializeGame(playerCount) {
     return false;
   }
   bankBalance -= initialPlayerMoney;
-  bankBalanceElement.textContent = bankBalance;
+  bankBalanceElement.textContent = fmt(bankBalance);
 
   for (let i = 1; i <= playerCount; i++) {
     players.push({ id: i, name: `Jugador ${i}`, balance: 1500 });
@@ -25,11 +41,8 @@ function initializeGame(playerCount) {
   // Guardar datos iniciales en localStorage
   saveGameState();
 
-  gameArea.style.display = "block";
-  resetGameButton.style.display = "block";
-  playerGrid.innerHTML = "";
-
   renderPlayers();
+  showGame();
   return true;
 }
 
@@ -40,36 +53,39 @@ function renderPlayers() {
 
   players.forEach((player) => {
     const playerCard = document.createElement("div");
+    const [deed, ink] = DEED_COLORS[(player.id - 1) % DEED_COLORS.length];
     playerCard.className = "player-card";
+    playerCard.style.cssText = `--deed:${deed};--deed-ink:${ink};--tilt:${((player.id * 7) % 5) - 2}deg`;
     playerCard.innerHTML = `
       <div class="name_player">
+        <small>Título de propiedad</small>
         <h4 id="player-name-${player.id}">${player.name}</h4>
       </div>
-      <p class="money">$<span id="balance-${player.id}">${player.balance}</span></p>
+      <p class="money"><small>Saldo</small>$<span id="balance-${player.id}">${fmt(player.balance)}</span></p>
       <div class="actions">
         <div class="input">
-          <input type="number" id="amount-${player.id}" placeholder="Cantidad">
+          <input type="number" id="amount-${player.id}" placeholder="Cantidad" min="1" inputmode="numeric">
           <div class="buttons">
-            <button class="add" onclick="addMoney(${player.id})">+</button>
-            <button class="minus" onclick="subtractMoney(${player.id})">-</button>
+            <button class="chip add" onclick="addMoney(${player.id})" title="Cobrar del banco" aria-label="Cobrar del banco">+</button>
+            <button class="chip minus" onclick="subtractMoney(${player.id})" title="Pagar al banco" aria-label="Pagar al banco">−</button>
           </div>
         </div>
         <div class="transfer">
           <select id="transfer-to-${player.id}">
-              <option value="">Seleccionar jugador</option>
+              <option value="">¿A quién?</option>
               ${players
                 .filter((p) => p.id !== player.id)
                 .map((p) => `<option value="${p.id}">${p.name}</option>`)
                 .join("")}
           </select>
-          <button onclick="transferMoney(${player.id})">Transferir</button>
+          <button class="btn btn-green" onclick="transferMoney(${player.id})">Transferir</button>
         </div>
       </div>
       <div class="rename" id="rename-container-${player.id}" style="display: ${
       player.name !== `Jugador ${player.id}` ? "none" : "flex"
     };">
         <input type="text" id="name-input-${player.id}" placeholder="Nuevo nombre">
-        <button onclick="changePlayerName(${player.id})">Cambiar</button>
+        <button class="btn btn-dark" onclick="changePlayerName(${player.id})">Cambiar</button>
       </div>
     `;
     playerGrid.appendChild(playerCard);
@@ -157,11 +173,9 @@ function changePlayerName(playerId) {
   if (newName) {
     const player = players.find((p) => p.id === playerId);
     player.name = newName;
-    updateUI(playerId);
     saveGameState();
-
-    // Ocultar la opción de cambiar nombre
-    document.getElementById(`rename-container-${playerId}`).style.display = "none";
+    // Re-render para actualizar los selectores de transferencia de todos
+    renderPlayers();
   } else {
     alert("Por favor, ingrese un nombre válido.");
   }
@@ -171,8 +185,8 @@ function changePlayerName(playerId) {
 function updateUI(playerId) {
   const player = players.find((p) => p.id === playerId);
   document.getElementById(`player-name-${player.id}`).textContent = player.name;
-  document.getElementById(`balance-${player.id}`).textContent = player.balance;
-  document.getElementById("bankBalance").textContent = bankBalance;
+  document.getElementById(`balance-${player.id}`).textContent = fmt(player.balance);
+  document.getElementById("bankBalance").textContent = fmt(bankBalance);
 }
 
 // Función para guardar el estado del juego en localStorage
@@ -190,9 +204,8 @@ function loadGameState() {
     players = savedPlayers;
     bankBalance = parseInt(savedBankBalance);
     renderPlayers();
-    document.getElementById("bankBalance").textContent = bankBalance;
-    document.getElementById("gameArea").style.display = "block";
-    document.getElementById("resetGame").style.display = "block";
+    document.getElementById("bankBalance").textContent = fmt(bankBalance);
+    showGame();
   }
 }
 
@@ -205,9 +218,7 @@ function resetGame() {
 // Event listeners
 document.getElementById("startGame").addEventListener("click", () => {
   const playerCount = parseInt(document.getElementById("playerCount").value);
-  if (initializeGame(playerCount)) {
-    renderPlayers();
-  }
+  initializeGame(playerCount);
 });
 
 document.getElementById("resetGame").addEventListener("click", resetGame);

@@ -1,221 +1,402 @@
+:root {
+  --felt: #1d6b45;
+  --felt-dark: #0d3b25;
+  --paper: #fbf7ea;
+  --paper-edge: #e9e1c7;
+  --ink: #1b1b1b;
+  --red: #d42a20;
+  --green: #1f9d55;
+  --gold: #c9a24a;
+  --noise: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 .22 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+
+* {
+  box-sizing: border-box;
+}
+
+/* Mesa de fieltro */
 body {
   font-family: "Outfit", sans-serif;
   margin: 0;
-  padding: 0;
-  background-color: #cae9e0;
-  color: #333;
+  min-height: 100vh;
+  color: var(--ink);
   text-align: center;
-  text-transform: uppercase;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  background:
+    var(--noise),
+    radial-gradient(ellipse at 50% 30%, #2a8a5b 0%, var(--felt) 45%, var(--felt-dark) 100%);
+  background-color: var(--felt);
+  background-attachment: fixed;
 }
 
 .container {
-  max-width: 1200px;
+  max-width: 1240px;
   margin: 0 auto;
-  padding: 20px;
+  padding: 24px 16px 64px;
+}
+
+.eyebrow,
+small {
+  display: block;
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  opacity: 0.7;
+  margin: 0 0 4px;
+}
+
+/* Tapa de la caja con el logo */
+.lid {
+  display: inline-block;
+  padding: 14px 22px;
+  margin-bottom: 28px;
+  background: #fff;
+  border-radius: 10px;
+  box-shadow:
+    inset 0 0 0 3px #fff,
+    inset 0 0 0 5px var(--red),
+    0 2px 0 #ccc,
+    0 14px 28px rgba(0, 0, 0, 0.45);
+  transform: rotate(-1.5deg);
+}
+
+.lid img {
+  display: block;
+  width: min(320px, 70vw);
+  height: auto;
+}
+
+/* Carta base (papel) */
+.card,
+.player-card {
+  background: linear-gradient(160deg, #fffdf5, var(--paper) 60%, var(--paper-edge));
+  border-radius: 14px;
+  box-shadow:
+    inset 0 1px 0 #fff,
+    0 1px 1px rgba(0, 0, 0, 0.2),
+    0 4px 0 -1px var(--paper-edge),
+    0 5px 2px -1px rgba(0, 0, 0, 0.25),
+    0 18px 30px rgba(0, 0, 0, 0.4);
 }
 
 .settings {
+  max-width: 380px;
+  margin: 0 auto;
+  padding: 26px 28px 28px;
   display: flex;
-  gap: 1rem;
+  flex-direction: column;
   align-items: center;
-  justify-content: center;
+  gap: 12px;
 }
 
-h1 {
-  background-color: #4caf50;
-  color: white;
-  padding: 20px 0;
-  margin: 0;
+.settings label {
+  font-size: 22px;
+  font-weight: 800;
 }
 
-label {
-  font-weight: bold;
-  margin-right: 10px;
-}
-
-input,
-select,
-button {
-  margin: 10px 0;
-  padding: 10px;
-  font-size: 16px;
-}
-
-button {
-  background-color: #4caf50;
-  color: white;
-  border: none;
-  cursor: pointer;
-  border-radius: 5px;
-}
-
-button:hover {
-  background-color: #45a049;
-}
-
-#gameArea {
-  display: inline-block;
-  text-align: left;
-}
-
-#gameArea h2 {
+.settings input {
+  width: 110px;
+  font-family: "Alfa Slab One", serif;
   font-size: 32px;
   text-align: center;
 }
 
-#gameArea p {
-  font-size: 28px;
-  font-weight: bold;
-  margin-bottom: 20px;
+/* Campos hundidos */
+input,
+select {
+  font: inherit;
+  font-size: 15px;
+  color: var(--ink);
+  padding: 10px 12px;
+  border: 1px solid #c9bf9f;
+  border-radius: 8px;
+  background: #fffef9;
+  box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.15), 0 1px 0 #fff;
+  outline: none;
 }
 
-#playerBalances p {
-  font-size: 18px;
-  margin: 5px 0;
+input:focus,
+select:focus {
+  border-color: var(--gold);
+  box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.15), 0 0 0 3px rgba(201, 162, 74, 0.35);
 }
 
-.grid {
+/* Botones en relieve */
+.btn {
+  --b: var(--green);
+  --b-dark: #12693a;
+  font: inherit;
+  font-weight: 800;
+  font-size: 14px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: #fff;
+  padding: 11px 20px;
+  border: 0;
+  border-radius: 10px;
+  cursor: pointer;
+  text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.35);
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.28), rgba(255, 255, 255, 0) 55%), var(--b);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.45),
+    0 4px 0 var(--b-dark),
+    0 6px 10px rgba(0, 0, 0, 0.3);
+  transition: transform 0.08s, box-shadow 0.08s, filter 0.15s;
+}
+
+.btn:hover {
+  filter: brightness(1.08);
+}
+
+.btn:active {
+  transform: translateY(3px);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.3),
+    0 1px 0 var(--b-dark),
+    0 2px 4px rgba(0, 0, 0, 0.3);
+}
+
+.btn-red {
+  --b: var(--red);
+  --b-dark: #8e1710;
+}
+
+.btn-dark {
+  --b: #3a3a3a;
+  --b-dark: #111;
+}
+
+.btn:focus-visible,
+.chip:focus-visible {
+  outline: 3px solid var(--gold);
+  outline-offset: 3px;
+}
+
+/* Billete del banco */
+.bank-row {
   display: flex;
-  justify-content: space-between;
   flex-wrap: wrap;
-  gap: 20px;
-  margin-top: 20px;
+  align-items: center;
   justify-content: center;
+  gap: 20px;
+  margin-bottom: 36px;
+}
+
+.bill {
+  padding: 8px;
+  border-radius: 6px;
+  background:
+    repeating-linear-gradient(45deg, rgba(0, 0, 0, 0.05) 0 2px, transparent 2px 6px),
+    #f2a65a;
+  box-shadow:
+    0 2px 0 #c97a34,
+    0 4px 0 #f2a65a,
+    0 6px 0 #c97a34,
+    0 8px 0 #f2a65a,
+    0 16px 24px rgba(0, 0, 0, 0.45);
+  transform: rotate(1deg);
+}
+
+.bill-inner {
+  display: flex;
+  align-items: center;
+  gap: 28px;
+  padding: 12px 22px;
+  border: 2px solid rgba(80, 40, 10, 0.55);
+  border-radius: 4px;
+  outline: 1px solid rgba(80, 40, 10, 0.35);
+  outline-offset: -6px;
+  color: #3b1d06;
+}
+
+.bill h2 {
+  margin: 0;
+  font-family: "Alfa Slab One", serif;
+  font-weight: 400;
+  font-size: clamp(30px, 6vw, 44px);
+  line-height: 1;
+  text-shadow: 0 1px 0 rgba(255, 255, 255, 0.4);
+}
+
+.bill-corner {
+  display: grid;
+  place-items: center;
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  border: 2px solid rgba(80, 40, 10, 0.55);
+  font-family: "Alfa Slab One", serif;
+  font-size: 18px;
+}
+
+/* Cartas de jugador: títulos de propiedad */
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  gap: 28px;
 }
 
 .player-card {
-  background: #ebf6f3;
-  border: none;
-  flex: 1 0 auto;
-  max-width: 350px;
-  border: 2px solid #333;
-  text-align: center;
-  transition: transform 0.2s ease, box-shadow 0.2s ease;
-
-  & .money {
-    font-size: 32px;
-    font-weight: bold;
-    color: #333;
-  }
+  position: relative;
+  padding: 12px;
+  transform: rotate(var(--tilt, 0deg));
+  transition: transform 0.25s cubic-bezier(0.2, 0.8, 0.2, 1.2), box-shadow 0.25s;
 }
 
-.player-card:hover {
-  transform: translateY(-5px);
+.player-card:hover,
+.player-card:focus-within {
+  transform: translateY(-6px) rotate(0deg);
+  box-shadow:
+    inset 0 1px 0 #fff,
+    0 4px 0 -1px var(--paper-edge),
+    0 5px 2px -1px rgba(0, 0, 0, 0.25),
+    0 28px 40px rgba(0, 0, 0, 0.45);
+}
+
+.player-card::after {
+  content: "";
+  position: absolute;
+  inset: 12px;
+  border: 2px solid var(--ink);
+  border-radius: 6px;
+  pointer-events: none;
+}
+
+.player-card .name_player {
+  padding: 12px 10px 14px;
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.25), rgba(0, 0, 0, 0.08)), var(--deed);
+  color: var(--deed-ink);
+  border-bottom: 2px solid var(--ink);
+  border-radius: 6px 6px 0 0;
 }
 
 .player-card h4 {
-  margin: 10px 0;
-  font-size: 24px;
-  color: #333;
-  font-weight: bold;
+  margin: 0;
+  font-size: 22px;
+  font-weight: 900;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  overflow-wrap: anywhere;
 }
 
-.player-card p {
-  font-size: 18px;
-  color: #555;
-  margin: 10px 0;
+.player-card .money {
+  margin: 0;
+  padding: 16px 10px 8px;
+  font-family: "Alfa Slab One", serif;
+  font-size: 40px;
+  line-height: 1.1;
 }
 
-.player-card .input {
-  justify-content: center;
-  display: flex;
-  gap: 1rem;
-
-  & input {
-    width: 100px;
-  }
-}
-
-.player-card input {
-  margin-top: 10px;
-  padding: 10px;
-  font-size: 14px;
-  width: 80%;
-  border: 1px solid #ccc;
-  border-radius: 5px;
-  background-color: #ffffff; /* Fondo blanco simple */
-  box-shadow: none; /* Eliminadas las sombras internas */
-}
-
-.player-card button {
-  padding: 10px 15px;
-  font-size: 14px;
-  background-color: #4caf50;
-  color: white;
-  border: none;
-  border-radius: 5px;
-  cursor: pointer;
-  transition: background-color 0.2s ease, transform 0.2s ease;
-  border-radius: 30px;
-}
-
-.player-card button:hover {
-  background-color: #45a049;
-  transform: scale(1.05);
-}
-
-.player-card select {
-  margin-top: 10px;
-  padding: 10px;
-  font-size: 14px;
-  width: 100%;
-  border: 1px solid #ccc;
-  border-radius: 5px;
-  background-color: #ffffff; /* Fondo blanco simple */
-  box-shadow: none; /* Eliminadas las sombras internas */
+.player-card .money small {
+  font-family: "Outfit", sans-serif;
+  margin-bottom: 6px;
 }
 
 .player-card .actions,
 .player-card .rename {
-  padding: 1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding: 12px 14px 16px;
+}
+
+.player-card .actions {
+  border-top: 1px dashed #b9ad87;
+  margin: 0;
+}
+
+.player-card .input {
   display: flex;
   align-items: center;
-  flex-direction: column;
   gap: 10px;
 }
 
-.player-card .actions .buttons button {
+.player-card .input input {
+  flex: 1;
+  min-width: 0;
+  font-weight: 600;
+}
+
+.player-card .buttons {
+  display: flex;
+  gap: 8px;
+}
+
+/* Fichas de póker */
+.chip {
+  --c: var(--green);
+  width: 46px;
+  height: 46px;
+  flex: none;
   border-radius: 50%;
-  background: #333;
-  height: 50px;
-  width: 50px;
-  color: white;
-  font-size: 18px;
-  font-weight: bold;
-  transition: background-color 0.2s ease, transform 0.2s ease;
-}
-
-.player-card .actions .buttons button:hover {
-  background-color: #555;
-  transform: scale(1.1);
-}
-
-.player-card .actions .transfer {
-  display: flex;
-  align-items: center;
-  flex-direction: column;
-  gap: 10px;
-}
-
-#resetGame {
-  display: inline-block;
-  padding: 10px 20px;
-  font-size: 16px;
-  background-color: #2d2d2d;
-  color: white;
-  border: none;
-  border-radius: 5px;
+  border: 0;
   cursor: pointer;
+  font-family: "Alfa Slab One", serif;
+  font-size: 22px;
+  line-height: 1;
+  color: #fff;
+  text-shadow: 0 1px 1px rgba(0, 0, 0, 0.4);
+  background:
+    radial-gradient(circle, var(--c) 0 13px, #fff 13px 15px, var(--c) 15px),
+    var(--c);
+  box-shadow:
+    inset 0 0 0 4px var(--c),
+    inset 0 0 0 7px rgba(255, 255, 255, 0.85),
+    0 3px 0 rgba(0, 0, 0, 0.35),
+    0 6px 10px rgba(0, 0, 0, 0.25);
+  transition: transform 0.15s;
 }
 
-#resetGame:hover {
-  background-color: #d32f2f;
+.chip:hover {
+  transform: rotate(25deg) scale(1.06);
 }
 
-.player-card .name_player {
-  padding: 20px;
-  background: #f6ea3d;
-  border-bottom: 2px solid #333;
+.chip:active {
+  transform: translateY(2px) rotate(25deg);
+  box-shadow:
+    inset 0 0 0 4px var(--c),
+    inset 0 0 0 7px rgba(255, 255, 255, 0.85),
+    0 1px 0 rgba(0, 0, 0, 0.35);
+}
+
+.chip.minus {
+  --c: var(--red);
+}
+
+.player-card .transfer {
+  display: flex;
+  gap: 8px;
+}
+
+.player-card .transfer select {
+  flex: 1;
+  min-width: 0;
+}
+
+.player-card .transfer .btn {
+  padding: 10px 14px;
+}
+
+.player-card .rename {
+  flex-direction: row;
+  border-top: 1px dashed #b9ad87;
+}
+
+.player-card .rename input {
+  flex: 1;
+  min-width: 0;
+}
+
+.player-card .rename .btn {
+  padding: 10px 14px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .player-card,
+  .chip,
+  .btn {
+    transition: none;
+  }
 }
