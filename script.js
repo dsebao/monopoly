@@ -8,6 +8,33 @@ const DEED_COLORS = [
   ["#ed1b24", "#fff"], ["#fef200", "#1b1b1b"], ["#1fb25a", "#fff"], ["#0072bb", "#fff"],
 ];
 
+// Sonido de monedas sintetizado con Web Audio (sin archivos)
+let audioCtx;
+function playCoins() {
+  try {
+    audioCtx ||= new (window.AudioContext || window.webkitAudioContext)();
+    const now = audioCtx.currentTime;
+    // Varias monedas cayendo: cada una con parciales inarmónicos metálicos
+    for (let i = 0; i < 5; i++) {
+      const t = now + i * 0.06 + Math.random() * 0.03;
+      const base = 1800 + Math.random() * 900;
+      [1, 2.76, 5.4].forEach((ratio, k) => {
+        const osc = audioCtx.createOscillator();
+        const gain = audioCtx.createGain();
+        osc.frequency.value = base * ratio;
+        gain.gain.setValueAtTime(0.0001, t);
+        gain.gain.exponentialRampToValueAtTime(0.18 / (k + 1), t + 0.004);
+        gain.gain.exponentialRampToValueAtTime(0.0001, t + 0.25 - k * 0.06);
+        osc.connect(gain).connect(audioCtx.destination);
+        osc.start(t);
+        osc.stop(t + 0.3);
+      });
+    }
+  } catch (e) {
+    // Sin soporte de audio: la operación sigue igual
+  }
+}
+
 const fmt = (n) => String(n).replace(/\B(?=(\d{3})+(?!\d))/g, ".");
 
 function showGame() {
@@ -40,6 +67,7 @@ function initializeGame(playerCount) {
 
   // Guardar datos iniciales en localStorage
   saveGameState();
+  playCoins();
 
   renderPlayers();
   showGame();
@@ -109,6 +137,7 @@ function addMoney(playerId) {
   bankBalance -= amount;
   updateUI(playerId);
   saveGameState();
+  playCoins();
   amountInput.value = ""; // Resetear el input
 }
 
@@ -129,6 +158,7 @@ function subtractMoney(playerId) {
   bankBalance += amount;
   updateUI(playerId);
   saveGameState();
+  playCoins();
   amountInput.value = ""; // Resetear el input
 }
 
@@ -162,6 +192,7 @@ function transferMoney(fromPlayerId) {
   updateUI(fromPlayerId);
   updateUI(toPlayerId);
   saveGameState();
+  playCoins();
 
   amountInput.value = ""; // Resetear el input
   transferToSelect.value = ""; // Resetear el selector
